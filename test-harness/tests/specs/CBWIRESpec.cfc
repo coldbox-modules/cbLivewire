@@ -55,6 +55,20 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 expect( html ).toInclude( "--livewire-progress-bar-color: ##cc0000;" );
             } );
 
+            it( "should show the progress bar by default", function() {
+                var CBWIREController = getInstance( "CBWIREController@cbwire" );
+                var html = CBWIREController.getScripts();
+                expect( html ).notToInclude( " data-no-progress-bar " );
+            } );
+
+            it( "should be able to disable the progress bar", function() {
+                var CBWIREController = getInstance( "CBWIREController@cbwire" );
+                var settings = getInstance( "coldbox:modulesettings:cbwire" );
+                settings.showProgressBar = false;
+                var html = CBWIREController.getScripts();
+                expect( html ).toInclude( " data-no-progress-bar " );
+            } );
+
             it( "should have default updateEndpoint", function() {
                 var CBWIREController = getInstance( "CBWIREController@cbwire" );
                 var settings = getInstance( "coldbox:modulesettings:cbwire" );
