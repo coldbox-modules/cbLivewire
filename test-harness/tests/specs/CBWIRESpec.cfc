@@ -41,6 +41,20 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 expect( reMatchNoCase( "CBWIRE Scripts", html ).len() ).toBe( 0 );
             } );
 
+            it( "should use default display bar color", function() {
+                var CBWIREController = getInstance( "CBWIREController@cbwire" );
+                var html = CBWIREController.getStyles( cache=false );
+                expect( html ).toInclude( "--livewire-progress-bar-color: ##2299dd;" );
+            } );
+
+            it( "should be able to change the display bar color", function() {
+                var CBWIREController = getInstance( "CBWIREController@cbwire" );
+                var settings = getInstance( "coldbox:modulesettings:cbwire" );
+                settings.progressBarColor = "##cc0000";
+                var html = CBWIREController.getStyles( cache=false );
+                expect( html ).toInclude( "--livewire-progress-bar-color: ##cc0000;" );
+            } );
+
             it( "should have default updateEndpoint", function() {
                 var CBWIREController = getInstance( "CBWIREController@cbwire" );
                 var settings = getInstance( "coldbox:modulesettings:cbwire" );

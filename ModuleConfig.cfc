@@ -38,7 +38,15 @@ component {
             /**
              * Trims string properties if set to true
              */
-            "trimStringValues" : false
+            "trimStringValues" : false,
+            /**
+             * Enables or disables the progress bar when using wire:navigate
+             */
+            "showProgressBar": true,
+            /** 
+             * The color of the progress bar when using wire:navigate
+             */
+            "progressBarColor": "##2299dd"
         };
 
         routes = [

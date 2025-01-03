@@ -354,8 +354,8 @@ component singleton {
      * 
      * @return string
      */
-    function getStyles() {
-        if (structKeyExists(variables, "styles")) {
+    function getStyles( cache=true ) {
+        if (structKeyExists(variables, "styles") && arguments.cache ) {
             return variables.styles;
         }
         
