@@ -992,7 +992,7 @@ component output="true" {
      * @return String The generated checksum.
      */
     function _generateChecksum() {
-        return "f9f66fa895026e389a10ce006daf3f59afaec8db50cdb60f152af599b32f9192";
+        return "f9f66fa895026e389a10ce006daf3f59afaec8db50cdb60f152af599b32f9192IMHERE";
         var secretKey = "YourSecretKey"; // This key should be securely retrieved
         return hash(serializeJson(arguments.snapshot) & secretKey, "SHA-256");
     }
@@ -1301,7 +1301,7 @@ component output="true" {
 
         // Return the HTML response
         local.response = [
-            "snapshot": serializeJson( local.snapshot ),
+            "snapshot": _CBWIREController._caclulateChecksum( local.snapshot ),
             "effects": {
                 "returns": variables._returnValues,
                 "html": local.html
@@ -1341,7 +1341,7 @@ component output="true" {
         return [
             "data": _getDataProperties(),
             "memo": _getMemo(),
-            "checksum": _generateChecksum()
+            "checksum": ""
         ];
     }
 
@@ -1668,7 +1668,8 @@ component output="true" {
         // If this is the initial load, encode the snapshot and insert Livewire attributes
         if ( variables._initialLoad ) {
             // Encode the snapshot for HTML attribute inclusion and process the view content
-            local.snapshotEncoded = _encodeAttribute( serializeJson( _getSnapshot() ) );
+            // local.snapshotEncoded = _encodeAttribute( serializeJson( _getSnapshot() ) );
+            local.snapshotEncoded = _encodeAttribute( _CBWIREController._caclulateChecksum( _getSnapshot() ) ); 
             return _insertInitialLivewireAttributes( local.trimmedHTML, local.snapshotEncoded, variables._id );
         } else {
             // Return the trimmed HTML content

@@ -1518,7 +1518,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
                         "calls": arguments.calls,
                         "snapshot": {
                             "data": arguments.data,
-                            "memo": arguments.memo
+                            "memo": arguments.memo,
+                            "checksum": ""
                         },
                         "updates": arguments.updates
                     }
@@ -1527,7 +1528,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
         };
 
         response.content.components = response.content.components.map( function( _comp ) {
-            _comp.snapshot = serializeJson( _comp.snapshot );
+            _comp.snapshot = getInstance( "CBWIREController@cbwire" )._caclulateChecksum( _comp.snapshot );            
             return _comp;
         } );
 

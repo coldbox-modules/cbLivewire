@@ -73,6 +73,7 @@ component singleton {
         }
         // Perform additional deserialization of the component snapshots
         local.payload.components = local.payload.components.map( function( _comp ) {
+            _validateChecksum( arguments._comp.snapshot );
             arguments._comp.snapshot = deserializeJSON( arguments._comp.snapshot );
             return arguments._comp;
         } );
@@ -116,6 +117,39 @@ component singleton {
         event.setHTTPHeader( name="Cache-Control", value="no-cache, must-revalidate, no-store, max-age=0, private" );
 
         return local.componentsResult;
+    }
+
+    /**
+     * Calculates a checksum for the component's data.
+     * 
+     * @payload string | The name of the computed property.
+     * 
+     * @return struct
+     */
+    function _caclulateChecksum( snapshot ) {
+        var secret = moduleSettings.keyExists("secret") ? moduleSettings.secret : hash( moduleSettings.moduleRootPath );
+        var serializedSnapshot = serializeJson( arguments.snapshot );
+        var checksum = hmac( serializedSnapshot, secret, "HMACSHA256");
+        return replace( serializedSnapshot, '"checksum":""', '"checksum":"#checksum#"', "all" )
+    }
+
+    /**
+     * Validates checksum for the component's data from snapshot.
+     * 
+     * @payload string | The name of the computed property.
+     * 
+     * @return void
+     */
+    function _validateChecksum( snapshot ) {
+        var searchResults = reFind('"checksum":"(.*?)"', snapshot, 1, true )
+        if( searchResults.match.len() < 2 ) throw( type="CBWIRECorruptPayloadException", message="Checksum Not Found." );
+        var secret = moduleSettings.keyExists("secret") ? moduleSettings.secret : hash( moduleSettings.moduleRootPath );
+        // var checksum = searchResults.match[2];
+        // var shapshotWithoutChecksum = replace( snapshot, searchResults.match[2], "", "one" );
+        // var calculatedChecksum = hmac( shapshotWithoutChecksum, secret, "HMACSHA256");
+        if( searchResults.match[2] != hmac( replace( snapshot, searchResults.match[2], "", "one" ), secret, "HMACSHA256") ){
+            throw( type="CBWIRECorruptPayloadException", message="Checksum Mismatch." );
+        }
     }
 
     /**
