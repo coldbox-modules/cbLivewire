@@ -767,6 +767,8 @@ component output="true" {
         local.updatedArrayProps = [];
         // Loop over the updates and apply them
         arguments.updates.each( function( key, value ) {
+			// validate if key is locked
+			_validateLockedProperty( key );
 
             // Check if we should trim if simple value
             if ( isSimpleValue( arguments.value ) && shouldTrimStringValues() ) {
@@ -803,6 +805,21 @@ component output="true" {
             invoke( this, "onUpdate", { newValues: duplicate( variables.data ), oldValues: local.oldValues } );
         }
     }
+
+    /**
+     * Validate if key being updated is a locked property.
+     *
+     * @key string | the data property key being updated.
+     *
+     * @return void
+     */
+	function _validateLockedProperty( key ) {
+		if( !variables.keyExists("locked") ) return;
+		if( isArray( variables.locked ) && arrayFindNoCase( variables.locked, arguments.key ) )
+			throw( type="CBWIREException", message="Locked properties cannot be updated." );
+		else if ( isSimpleValue( variables.locked ) && listToArray(variables.locked).find( arguments.key ) )
+			throw( type="CBWIREException", message="Locked properties cannot be updated." );
+	}
 
     /**
      * Apply calls to the component
@@ -1224,10 +1241,10 @@ component output="true" {
             snapshot.data.forMount.prepend( { "#arguments.key#": arguments.value } );
         } );
 
-    	// Serialize the snapshot to JSON, calculate the checksum, and then encode it for HTML attribute inclusion
-		local.lazyLoadSnapshot = _CBWIREController._caclulateChecksum( local.snapshot )
+    	  // Serialize the snapshot to JSON, calculate the checksum, and then encode it for HTML attribute inclusion
+		    local.lazyLoadSnapshot = _CBWIREController._caclulateChecksum( local.snapshot )
 
-		// Generate the base64 encoded version of the serialized snapshot for use in x-intersect
+		    // Generate the base64 encoded version of the serialized snapshot for use in x-intersect
         local.base64EncodedSnapshot = toBase64( local.lazyLoadSnapshot );
 
         // Get our placeholder html
@@ -1239,7 +1256,7 @@ component output="true" {
         }
 
         // Define the wire attributes to append
-		local.wireAttributes = 'wire:snapshot="' & _encodeAttribute( _CBWIREController._caclulateChecksum( _getSnapshot() ) ) & '" wire:effects="#_generateWireEffectsAttribute()#" wire:id="#variables._id#"' & ' x-intersect="$wire._lazyMount(&##039;' & local.base64EncodedSnapshot & '&##039;)"';
+		    local.wireAttributes = 'wire:snapshot="' & _encodeAttribute( _CBWIREController._caclulateChecksum( _getSnapshot() ) ) & '" wire:effects="#_generateWireEffectsAttribute()#" wire:id="#variables._id#"' & ' x-intersect="$wire._lazyMount(&##039;' & local.base64EncodedSnapshot & '&##039;)"';
 
         // Determine our outer element
         local.outerElement = _getOuterElement( local.html );

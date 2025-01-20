@@ -1128,6 +1128,100 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 var response = cbwireController.handleRequest( payload, event );
                 expect( response.components[1].effects.html ).toInclude( "CBWIRE Slaps!" );
             } );
+
+            it( "should throw a CBWIREException when trying to update a locked property (array)", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_throw_exception_on_locked_data_property_array",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+				expect( function() {
+					cbwireController.handleRequest( payload, event );
+				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
+            } );
+
+            it( "should throw a CBWIREException when trying to update a locked property (list)", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_throw_exception_on_locked_data_property_list",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+				expect( function() {
+					cbwireController.handleRequest( payload, event );
+				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
+            } );
+
+            it( "should throw a CBWIREException when trying to update a locked property (string)", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_throw_exception_on_locked_data_property_string",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+				expect( function() {
+					cbwireController.handleRequest( payload, event );
+				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
+            } );
+
+            it( "should not throw an error when empty array is used for locked property ", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_not_throw_exception_on_locked_data_property_empty_array",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+                var response = cbwireController.handleRequest( payload, event );
+                expect( response.components[1].effects.html ).toInclude( "Locked Property Value: Changed Value" );
+            } );
+
+            it( "should not throw an error when empty string is used for locked property ", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_not_throw_exception_on_locked_data_property_empty_string",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+                var response = cbwireController.handleRequest( payload, event );
+                expect( response.components[1].effects.html ).toInclude( "Locked Property Value: Changed Value" );
+            } );
+
+            it( "should not throw an error when data type other than array or string is used for locked property ", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_not_throw_exception_on_locked_data_property_other",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+                var response = cbwireController.handleRequest( payload, event );
+                expect( response.components[1].effects.html ).toInclude( "Locked Property Value: Changed Value" );
+            } );
+
         } );
 
         describe("File Uploads", function() {
