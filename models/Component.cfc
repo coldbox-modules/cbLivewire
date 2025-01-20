@@ -35,7 +35,7 @@ component output="true" {
 
     /**
      * Constructor
-     * 
+     *
      * @return The initialized component instance.
      */
     function init() {
@@ -46,7 +46,7 @@ component output="true" {
      * Initializes the component after dependency injection, setting a unique ID if not already set.
      * This method should be called by any extending component's init method if overridden.
      * Extending components should invoke super.init() to ensure the base initialization is performed.
-     * 
+     *
      * @return The initialized component instance.
      */
     function onDIComplete() {
@@ -71,8 +71,8 @@ component output="true" {
         variables._renderedContent = "";
         variables._scripts = [:];
         variables._assets = [:];
-        
-        /* 
+
+        /*
             Cache the component's meta data on initialization
             for fast access where needed.
         */
@@ -84,11 +84,11 @@ component output="true" {
         _prepareDataProperties();
 
         /*
-            Prep our computed properties for caching 
+            Prep our computed properties for caching
         */
         _prepareComputedProperties();
-        
-        /* 
+
+        /*
             Prep generated getters and setters for data properties
         */
         _prepareGeneratedGettersAndSetters();
@@ -98,17 +98,17 @@ component output="true" {
         */
         _prepareIsolation();
 
-        /* 
+        /*
             Prep for lazy loading
         */
         _prepareLazyLoading();
 
-        /* 
+        /*
             Prep listeners
         */
         _prepareListeners();
 
-        /* 
+        /*
             Fire onBoot lifecycle method
             if it exists
         */
@@ -133,7 +133,7 @@ component output="true" {
 
     /**
      * Returns the CBWIRE Controller
-     * 
+     *
      * @return CBWIREController
      */
     function getCBWIREController(){
@@ -142,7 +142,7 @@ component output="true" {
 
     /**
      * renderIt left for backwards compatibility.
-     * 
+     *
      * @return string
      */
     function renderIt() {
@@ -246,7 +246,7 @@ component output="true" {
     /**
      * Captures a dispatch to be executed later
      * by the browser.
-     * 
+     *
      * @event string | The event to dispatch.
      * @params | The parameters to pass to the listeners.
      *
@@ -264,8 +264,8 @@ component output="true" {
      *
      * @event string | The event to dispatch.
      * @params struct | The parameters to pass to the method.
-     * 
-     * @return void 
+     *
+     * @return void
      */
     function dispatchSelf( event, params = [:] ) {
        local.params = _parseDispatchParams( arguments.params );
@@ -275,11 +275,11 @@ component output="true" {
 
     /**
      * Dispatches a event to another component
-     * 
+     *
      * @to string | The component to dispatch to.
      * @event string | The method to dispatch.
      * @params struct | The parameters to pass to the method.
-     * 
+     *
      * @return void
      */
     function dispatchTo( to, event, params = [:]) {
@@ -292,7 +292,7 @@ component output="true" {
      * Instantiates a CBWIRE component, mounts it,
      * and then calls its internal onRender() method.
      *
-     * This is nearly identical to the wire method defined 
+     * This is nearly identical to the wire method defined
      * in the CBWIREController component, but it is intended
      * to provide the wire() method when including nested components
      * and provides tracking of the child.
@@ -320,8 +320,8 @@ component output="true" {
             local.children = local.incomingPayload.snapshot.memo.children;
             // Are we trying to render a child that has already been rendered?
             if ( isStruct( local.children ) && local.children.keyExists( arguments.key ) ) {
-    
-                local.componentTag = local.children[ arguments.key ][1]; 
+
+                local.componentTag = local.children[ arguments.key ][1];
                 local.componentId = local.children[ arguments.key ][2];
                 // Re-track the rendered child
                 variables._children.append( {
@@ -376,7 +376,7 @@ component output="true" {
 
     /**
      * Provides cbvalidation method to be used in actions and views.
-     * 
+     *
      * @return ValidationResult
      */
     function validate( target, fields, constraints, locale, excludeFields, includeFields, profiles ){
@@ -389,8 +389,8 @@ component output="true" {
     /**
      * Provides cbvalidation method to be used in actions and views,
      * throwing an exception if validation fails.
-     * 
-     * 
+     *
+     *
      * @throws ValidationException
      */
     function validateOrFail(){
@@ -402,7 +402,7 @@ component output="true" {
 
     /**
      * Returns true if the validation result has errors.
-     * 
+     *
      * @return boolean
      */
     function hasErrors() {
@@ -411,7 +411,7 @@ component output="true" {
 
     /**
      * Returns true if a specific property has errors.
-     * 
+     *
      * @return boolean
      */
     function hasError( prop ) {
@@ -420,7 +420,7 @@ component output="true" {
 
     /**
      * Returns array of ValidationError objects containing all of theerrors.
-     * 
+     *
      * @return array
      */
     function getErrors() {
@@ -429,7 +429,7 @@ component output="true" {
 
     /**
      * Returns the first error message for a given field.
-     * 
+     *
      * @return string
      */
     function getError( prop ) {
@@ -442,7 +442,7 @@ component output="true" {
 
     /**
      * Returns true if property passes validation.
-     * 
+     *
      * @return boolean
      */
     function validates( prop ) {
@@ -452,8 +452,8 @@ component output="true" {
     /**
      * Resets a data property to it's initial value.
      * Can be used to reset all data properties, a single data property, or an array of data properties.
-     * 
-     * @return 
+     *
+     * @return
      */
     function reset( property ){
         if ( isNull( arguments.property ) ) {
@@ -475,7 +475,7 @@ component output="true" {
 
     /**
      * Resets all data properties except the ones specified.
-     * 
+     *
      * @return void
      */
     function resetExcept( property ){
@@ -508,9 +508,9 @@ component output="true" {
     }
 
     /**
-     * Provide ability to return and execute Javascript 
+     * Provide ability to return and execute Javascript
      * in the browser.
-     * 
+     *
      * @return void
      */
     function js( code ) {
@@ -519,11 +519,11 @@ component output="true" {
 
     /**
      * Streams content to the client.
-     * 
+     *
      * @target string | The target to stream to.
      * @content string | The content to stream.
      * @replace boolean | Whether to replace the content.
-     * 
+     *
      * @return void
      */
     function stream( target, content, replace ) output="true"{
@@ -558,7 +558,7 @@ component output="true" {
      * Provides a placeholder that is used when lazy loading components.
      * This method returns an empty string. Override this method in your
      * component to provide a custom placeholder.
-     * 
+     *
      * @return string
      */
     function placeholder() {
@@ -566,14 +566,14 @@ component output="true" {
     }
 
     /**
-     * Built in action that does nothing but causes the template 
+     * Built in action that does nothing but causes the template
      * to re-render on subsequent requests.
-     * 
+     *
      * @return void
      */
     function $refresh() {}
 
-    /* 
+    /*
         ==================================================================
         Internal API
         ==================================================================
@@ -581,7 +581,7 @@ component output="true" {
 
     /**
      * Returns the id of the component.
-     * 
+     *
      * @return string
      */
     function _getId() {
@@ -590,7 +590,7 @@ component output="true" {
 
     /**
      * Passes a reference to the parent of a child component.
-     * 
+     *
      * @return Component
      */
     function _withParent( parent ) {
@@ -602,7 +602,7 @@ component output="true" {
      * Passes the path of the component.
      *
      * @path string | The path of the component.
-     * 
+     *
      * @return Component
      */
     function _withPath( path ) {
@@ -612,7 +612,7 @@ component output="true" {
 
     /**
      * Passes the current event into our component.
-     * 
+     *
      * @return Component
      */
     function _withEvent( event ) {
@@ -622,7 +622,7 @@ component output="true" {
 
     /**
      * Passes in incoming payload to the component
-     * 
+     *
      * @return Component
      */
     function _withIncomingPayload( payload ) {
@@ -636,7 +636,7 @@ component output="true" {
      *
      * @params struct | The parameters to be passed to the component.
      * @lazy boolean | (Optional) A boolean value indicating whether the component should be lazily loaded. Default is false.
-     * 
+     *
      * @return Component The updated component with the specified parameters.
      */
     function _withParams( params, lazy = false ) {
@@ -653,11 +653,11 @@ component output="true" {
 
         try {
             // Fire onMount if it exists
-            onMount( 
+            onMount(
                 event=variables._event,
                 rc=variables._event.getCollection(),
-                prc=variables._event.getPrivateCollection(),    
-                params=arguments.params         
+                prc=variables._event.getPrivateCollection(),
+                params=arguments.params
             );
         } catch ( any e ) {
             throw( type="CBWIREException", message="Failure when calling onMount(). #e.message#" );
@@ -671,7 +671,7 @@ component output="true" {
      * on subsequent requests.
      *
      * @key string | The key to be used to identify the component.
-     * 
+     *
      * @return Component
      */
     function _withKey( key ) {
@@ -681,9 +681,9 @@ component output="true" {
 
     /**
      * Passes a lazy load flag to the component.
-     * 
+     *
      * @lazy boolean | A boolean value indicating whether the component should be lazily loaded.
-     * 
+     *
      * @return Component
      */
     function _withLazy( lazy ) {
@@ -694,9 +694,9 @@ component output="true" {
 
     /**
      * Hydrate the component
-     * 
+     *
      * @componentPayload struct | A struct containing the payload to hydrate the component with.
-     * 
+     *
      * @return void
      */
     function _hydrate( componentPayload ) {
@@ -754,14 +754,14 @@ component output="true" {
 
     /**
      * Apply updates to the component
-     * 
+     *
      * @updates struct | A struct containing the updates to apply to the component.
-     * 
+     *
      * @return void
      */
     function _applyUpdates( updates ) {
         if ( !updates.count() ) return;
-        // Capture old values 
+        // Capture old values
         local.oldValues = duplicate( data );
         // Array to track which array props were updated
         local.updatedArrayProps = [];
@@ -791,7 +791,7 @@ component output="true" {
                 }
             }
         } );
-        
+
         local.updatedArrayProps.each( function( prop ) {
             variables.data[ arguments.prop ] = variables.data[ arguments.prop ].filter( function( value ) {
                 return arguments.value != "__rm__";
@@ -806,9 +806,9 @@ component output="true" {
 
     /**
      * Apply calls to the component
-     * 
+     *
      * @calls array | An array of calls to apply to the component.
-     * 
+     *
      * @return void
      */
     function _applyCalls( calls ) {
@@ -828,7 +828,7 @@ component output="true" {
     /**
      * Returns the validation manager if it's available.
      * Otherwise throws error.
-     * 
+     *
      * @return ValidationManager
      */
     function _getValidationManager(){
@@ -841,7 +841,7 @@ component output="true" {
 
     /**
      * Returns a struct of cbvalidation constraints.
-     * 
+     *
      * @return struct
      */
     function _getConstraints(){
@@ -855,7 +855,7 @@ component output="true" {
      * Parses the dispatch parameters into an array.
      *
      * @params struct | The parameters to parse.
-     * 
+     *
      * @return array
      */
     function _parseDispatchParams( params ) {
@@ -867,7 +867,7 @@ component output="true" {
      * Returns the normalized view path.
      *
      * @viewPath string | The dot notation path to the view template to be rendered, without the .cfm extension.
-     * 
+     *
      * @return string
      */
     function _getNormalizedViewPath( viewPath ) {
@@ -894,8 +894,8 @@ component output="true" {
     }
 
     /**
-     * Handles a dispatched event 
-     * 
+     * Handles a dispatched event
+     *
      * @return void
      */
     function __dispatch( event, params ) {
@@ -918,7 +918,7 @@ component output="true" {
             event="upload:generatedSignedUrl",
             params=[
                 "name"=arguments.prop,
-                "url"=local.uploadURL 
+                "url"=local.uploadURL
             ]
         );
     }
@@ -929,8 +929,8 @@ component output="true" {
      * @prop string | The property for the file input.
      * @params struct | The parameters to pass to the upload method.
      * @self boolean | Whether to dispatch to self.
-     * 
-     * @return void 
+     *
+     * @return void
      */
     function _finishUpload( prop, files, self ) {
         // Dispatch the upload URL
@@ -944,24 +944,24 @@ component output="true" {
     }
 
     /**
-     * Fires when missing methods are called. 
+     * Fires when missing methods are called.
      * Handles computed properties.
-     * 
+     *
      * @missingMethodName string | The name of the missing method.
      * @missingMethodArguments struct | The arguments passed to the missing method.
      *
      * @return any
      */
     function onMissingMethod( missingMethodName, missingMethodArguments ){
-        /* 
-            Check the component's meta data for functions 
+        /*
+            Check the component's meta data for functions
             labeled as computed.
         */
         var meta = variables._metaData;
-        /* 
+        /*
             Handle generated getters and setters for data properties.
             You see we are also preparing the getters and setters in the init method.
-            This is provide access to the dynamic methods both from outside 
+            This is provide access to the dynamic methods both from outside
             the component as well as from within the component.
         */
         if ( arguments.missingMethodName.reFindNoCase( "^get[A-Z].*" ) ) {
@@ -980,28 +980,17 @@ component output="true" {
             }
         }
 
-        /* 
+        /*
             Throw an exception if the missing method is not a computed property.
         */
         throw( type="CBWIREException", message="The method '#arguments.missingMethodName#' does not exist." );
     }
 
     /**
-     * Generates a checksum for securing the component's data.
-     *
-     * @return String The generated checksum.
-     */
-    function _generateChecksum() {
-        return "f9f66fa895026e389a10ce006daf3f59afaec8db50cdb60f152af599b32f9192IMHERE";
-        var secretKey = "YourSecretKey"; // This key should be securely retrieved
-        return hash(serializeJson(arguments.snapshot) & secretKey, "SHA-256");
-    }
-
-    /**
      * Encodes a given string for safe usage within an HTML attribute.
      *
      * @value string | The string to be encoded.
-     * 
+     *
      * @return String The encoded string suitable for HTML attribute inclusion.
      */
     function _encodeAttribute( value ) {
@@ -1015,15 +1004,15 @@ component output="true" {
      * @html string | The original HTML content to be processed.
      * @snapshotEncoded string | The encoded snapshot data for Livewire's consumption.
      * @id string | The component's unique identifier.
-     * 
+     *
      * @return String The HTML content with Livewire attributes properly inserted.
      */
     function _insertInitialLivewireAttributes( html, snapshotEncoded, id ) {
-        // Trim our html 
+        // Trim our html
         arguments.html = arguments.html.trim();
         // Define the wire attributes to append
         local.wireAttributes = 'wire:snapshot="' & arguments.snapshotEncoded & '" wire:effects="#_generateWireEffectsAttribute()#" wire:id="#variables._id#"';
-        // Determine our outer element 
+        // Determine our outer element
         local.outerElement = _getOuterElement( arguments.html );
         // Find the position of the opening tag
         local.openingTagStart = findNoCase("<" & local.outerElement, arguments.html);
@@ -1034,15 +1023,15 @@ component output="true" {
             local.newOpeningTag = replace(local.openingTag, "<" & local.outerElement, "<" & local.outerElement & " " & local.wireAttributes, "one");
             arguments.html = replace(arguments.html, local.openingTag, local.newOpeningTag, "one");
         }
-        
+
         return arguments.html;
     }
 
     /**
      * Inserts subsequent Livewire-specific attributes into the given HTML content.
-     * 
+     *
      * @html string | The original HTML content to be processed.
-     * 
+     *
      * @return String The HTML content with Livewire attributes properly inserted.
      */
     function _insertSubsequentLivewireAttributes( html ) {
@@ -1058,9 +1047,9 @@ component output="true" {
 
     /**
      * Provides on subsequent mounting for lazy loaded components.
-     * 
+     *
      * @snapshot string | The base64 encoded snapshot.
-     * 
+     *
      * @return void
      */
     function _lazyMount( snapshot ) {
@@ -1074,21 +1063,21 @@ component output="true" {
             return acc;
         }, [:] );
         // Call our onMount method with the params
-        onMount( 
+        onMount(
             event=variables._event,
             rc=variables._event.getCollection(),
             prc=variables._event.getPrivateCollection(),
             params=local.mountParams
         );
     }
-    
+
     /**
      * Renders the content of a view template file.
      * This method is used internally by the view method to render the content of a view template.
-     * 
+     *
      * @normalizedPath string | The normalized path to the view template file.
      * @params struct | The parameters to pass to the view template.
-     * 
+     *
      * @return The rendered content of the view template.
      */
     function _renderViewContent( normalizedPath, params = {} ){
@@ -1113,7 +1102,7 @@ component output="true" {
 
     /**
      * Parses the return values from the RendererEncapsulator.
-     * 
+     *
      * @return void
      */
     function _parseTemplateReturnValues( returnValues ) {
@@ -1159,7 +1148,7 @@ component output="true" {
 
         // Trim and remove any extra spaces between tags for accurate matching
         local.cleanHtml = trim(arguments.trimmedHtml).replaceAll("\s+>", ">");
-        
+
         // Regex to find all tags
         local.tags = reMatch("<\/?[a-z]+[^>]*>", local.cleanHtml);
 
@@ -1171,7 +1160,7 @@ component output="true" {
         // Check for single outer element by comparing the first and last tag
         local.firstTag = tags.first().replaceAll("<\/?([a-z]+)[^>]*>", "$1");
         local.lastTag = tags.last().replaceAll("<\/?([a-z]+)[^>]*>", "$1");
-        
+
         // Check if the first and last tags match and are properly nested
         if ( local.firstTag != local.lastTag ) {
             throw("CBWIRETemplateException", "Template does not have matching outer tags.");
@@ -1204,7 +1193,7 @@ component output="true" {
      * for lazy loading.
      *
      * @params struct | The parameters to pass to the snapshot.
-     * 
+     *
      * @return string
      */
     function _generateXIntersectLazyLoadSnapshot( params = {} ) {
@@ -1227,7 +1216,7 @@ component output="true" {
                 "errors": [],
                 "locale": "en"
             ],
-            "checksum": _generateChecksum()
+            "checksum": ""
         };
 
         // Prepend any passed in params into our forMount array
@@ -1235,11 +1224,11 @@ component output="true" {
             snapshot.data.forMount.prepend( { "#arguments.key#": arguments.value } );
         } );
 
-        // Serialize the snapshot to JSON and then encode it for HTML attribute inclusion
-        local.lazyLoadSnapshot = serializeJson( local.snapshot );
-    
-        // Generate the base64 encoded version of the serialized snapshot for use in x-intersect
-        local.base64EncodedSnapshot = toBase64( local.lazyLoadSnapshot );   
+    	// Serialize the snapshot to JSON, calculate the checksum, and then encode it for HTML attribute inclusion
+		local.lazyLoadSnapshot = _CBWIREController._caclulateChecksum( local.snapshot )
+
+		// Generate the base64 encoded version of the serialized snapshot for use in x-intersect
+        local.base64EncodedSnapshot = toBase64( local.lazyLoadSnapshot );
 
         // Get our placeholder html
         local.html = placeholder();
@@ -1250,7 +1239,7 @@ component output="true" {
         }
 
         // Define the wire attributes to append
-        local.wireAttributes = 'wire:snapshot="' & _encodeAttribute( serializeJson( _getSnapshot() ) ) & '" wire:effects="#_generateWireEffectsAttribute()#" wire:id="#variables._id#"' & ' x-intersect="$wire._lazyMount(&##039;' & local.base64EncodedSnapshot & '&##039;)"';
+		local.wireAttributes = 'wire:snapshot="' & _encodeAttribute( _CBWIREController._caclulateChecksum( _getSnapshot() ) ) & '" wire:effects="#_generateWireEffectsAttribute()#" wire:id="#variables._id#"' & ' x-intersect="$wire._lazyMount(&##039;' & local.base64EncodedSnapshot & '&##039;)"';
 
         // Determine our outer element
         local.outerElement = _getOuterElement( local.html );
@@ -1262,10 +1251,10 @@ component output="true" {
     /**
      * Get the HTTP response for the component
      * for subsequent requests.
-     * 
+     *
      * @componentPayload struct | The payload to hydrate the component with.
      * @httpRequestState struct | The state of the entire HTTP request being returned for all components.
-     * 
+     *
      * @return struct
      */
     function _getHTTPResponse( componentPayload, httpRequestState ){
@@ -1281,11 +1270,11 @@ component output="true" {
         } catch ( any e ) {}
         /*
             Return the html response first. It's important that we do
-            this before calling _getSnapshot() because otherwise any 
+            this before calling _getSnapshot() because otherwise any
             child objects will not have been tracked yet.
         */
         local.html = _render();
-        // Get snapshot 
+        // Get snapshot
         local.snapshot = _getSnapshot();
         // Check snapshot for FileUploads, serialize them if found
         local.snapshot.data.each( function( key, value ) {
@@ -1320,7 +1309,7 @@ component output="true" {
             local.response.effects[ "redirect" ] = variables._redirect;
             local.response.effects[ "redirectUsingNavigate" ] = variables._redirectUsingNavigate;
         }
-        // Add any cbwire:scripts 
+        // Add any cbwire:scripts
         if ( variables._scripts.count() ) {
             local.response.effects[ "scripts" ] = variables._scripts;
         }
@@ -1334,7 +1323,7 @@ component output="true" {
 
     /**
      * Get the snapshot of the component
-     * 
+     *
      * @return struct
      */
     function _getSnapshot() {
@@ -1347,10 +1336,10 @@ component output="true" {
 
     /**
      * Generates a computed property that caches the result of the computed method.
-     * 
+     *
      * @name string | The name of the computed property.
      * @method string | The method to compute the property.
-     * 
+     *
      * @return void
      */
     function _generateComputedProperty( name, method ) {
@@ -1373,7 +1362,7 @@ component output="true" {
 
     /**
      * Prepare our data properties
-     * 
+     *
      * @return void
      */
     function _prepareDataProperties() {
@@ -1396,7 +1385,7 @@ component output="true" {
         */
         variables._initialDataProperties = duplicate( _getDataProperties() );
     }
-     
+
     /**
      * This method will iterate over the component's meta data
      * and prepare any functions labeled as computed for caching.
@@ -1404,7 +1393,7 @@ component output="true" {
      * @return void
      */
     function _prepareComputedProperties() {
-        /* 
+        /*
             Filter the component's meta data for functions labeled as computed.
             For each computed function, generate a computed property
             that caches the result of the computed function.
@@ -1414,7 +1403,7 @@ component output="true" {
         } ).each( function( func ) {
             _generateComputedProperty( func.name, this[func.name] );
         } );
-        
+
         /*
             Look for additional computed properties defined in the 'computed'
             variable scope and generate computed properties for each.
@@ -1428,20 +1417,20 @@ component output="true" {
 
     /**
      * Prepares generated getters and setters for data properties.
-     * We have to generate these getters and setters when the component 
-     * initializes AND also check in onMissingMethod to handle the 
+     * We have to generate these getters and setters when the component
+     * initializes AND also check in onMissingMethod to handle the
      * dynamic methods being called either outside or from within the component.
-     * 
+     *
      * @return void
      */
     function _prepareGeneratedGettersAndSetters() {
-        /* 
+        /*
             Determine our data property names by inspecting
             both the data struct and the components property tags.
         */
         var dataPropertyNames = variables._dataPropertyNames;
 
-        /* 
+        /*
             Loop over our data property names and generate
             getters and setters for each property.
         */
@@ -1461,23 +1450,23 @@ component output="true" {
 
     /**
      * Prepares the component for isolation.
-     * 
+     *
      * @return void
      */
     function _prepareIsolation() {
         // If the component has an isolate method, call it
-        variables._isolate = variables.keyExists( "isolate" ) && isBoolean( variables.isolate ) && variables.isolate ? 
+        variables._isolate = variables.keyExists( "isolate" ) && isBoolean( variables.isolate ) && variables.isolate ?
             true : false;
     }
 
     /**
      * Prepares the component for lazy loading.
-     * 
+     *
      * @return void
      */
     function _prepareLazyLoading() {
         // If the component has a lazyLoad method, call it
-        variables._lazyLoad = variables.keyExists( "lazyLoad" ) && isBoolean( variables.lazyLoad ) && variables.lazyLoad ? 
+        variables._lazyLoad = variables.keyExists( "lazyLoad" ) && isBoolean( variables.lazyLoad ) && variables.lazyLoad ?
             true : false;
 
         if ( variables._lazyLoad ) {
@@ -1487,11 +1476,11 @@ component output="true" {
 
     /**
      * Prepares the component for listening to events.
-     * 
+     *
      * @return void
      */
     function _prepareListeners() {
-        /* 
+        /*
             listers = {
                 'eventName': 'methodName'
             }
@@ -1523,7 +1512,7 @@ component output="true" {
 
     /**
      * Returns the module name.
-     * 
+     *
      * @return string
      */
     function _getModuleName() {
@@ -1532,7 +1521,7 @@ component output="true" {
 
     /**
      * Returns the data properties and their values.
-     * 
+     *
      * @return struct
      */
     function _getDataProperties(){
@@ -1548,7 +1537,7 @@ component output="true" {
 
     /**
      * Returns the component's memo data.
-     * 
+     *
      * @return struct
      */
     function _getMemo(){
@@ -1570,9 +1559,9 @@ component output="true" {
 
     /**
      * Returns the component's name.
-     * 
+     *
      * @return string
-     
+
      */
     function _getComponentName(){
         if ( variables._metaData.name contains "cbwire.models.tmp." ) {
@@ -1585,9 +1574,9 @@ component output="true" {
     /**
      * Take an incoming rendering and determine the outer component tag.
      * <div>...</div> would return 'div'
-     * 
+     *
      * @rendering string | The rendering to parse.
-     * 
+     *
      * @return string
      */
     function _getComponentTag( rendering ){
@@ -1601,7 +1590,7 @@ component output="true" {
 
     /**
      * Returns a generated key for the component.
-     * 
+     *
      * @return string
      */
     function _generateWireKey(){
@@ -1610,7 +1599,7 @@ component output="true" {
 
     /**
      * Returns the component's script tags.
-     * 
+     *
      * @return struct
      */
     function _getScripts(){
@@ -1619,7 +1608,7 @@ component output="true" {
 
     /**
      * Returns the component's meta data.
-     * 
+     *
      * @return struct
      */
     function _getMetaData(){
@@ -1628,7 +1617,7 @@ component output="true" {
 
     /**
      * Returns the validation result.
-     * 
+     *
      * @return ValidationResult
      */
     function _getValidationResult(){
@@ -1637,7 +1626,7 @@ component output="true" {
 
     /**
      * Returns the wire:effects attribute contents.
-     * 
+     *
      * @return string
      */
     function _generateWireEffectsAttribute() {
@@ -1669,7 +1658,7 @@ component output="true" {
         if ( variables._initialLoad ) {
             // Encode the snapshot for HTML attribute inclusion and process the view content
             // local.snapshotEncoded = _encodeAttribute( serializeJson( _getSnapshot() ) );
-            local.snapshotEncoded = _encodeAttribute( _CBWIREController._caclulateChecksum( _getSnapshot() ) ); 
+            local.snapshotEncoded = _encodeAttribute( _CBWIREController._caclulateChecksum( _getSnapshot() ) );
             return _insertInitialLivewireAttributes( local.trimmedHTML, local.snapshotEncoded, variables._id );
         } else {
             // Return the trimmed HTML content
@@ -1680,7 +1669,7 @@ component output="true" {
     /**
      * Returns the first outer element from the provided html.
      * "<div x-data=""></div>" returns "div";
-     * 
+     *
      * @return string
      */
     function _getOuterElement( html ) {
@@ -1691,7 +1680,7 @@ component output="true" {
 
     /**
      * Returns true if the path contains a module.
-     * 
+     *
      * @return boolean
      */
     function isModulePath() {
@@ -1700,7 +1689,7 @@ component output="true" {
 
     /**
      * Returns true if the cbvalidation module is installed.
-     * 
+     *
      * @return boolean
      */
     function _isCBValidationInstalled() {
@@ -1715,11 +1704,11 @@ component output="true" {
     /**
      * Returns true if trimStringValues is enabled, either globally
      * or for the component.
-     * 
+     *
      * @return boolean
      */
     function shouldTrimStringValues() {
-        return 
+        return
             ( _globalSettings.keyExists( "trimStringValues" ) && _globalSettings.trimStringValues == true ) ||
             ( variables.keyExists( "trimStringValues" ) && variables.trimStringValues == true );
     }

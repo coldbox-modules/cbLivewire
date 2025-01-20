@@ -11,7 +11,7 @@ component singleton {
 
     // Inject module settings
     property name="moduleSettings" inject="coldbox:modulesettings:cbwire";
-    
+
     // Inject module service
     property name="moduleService" inject="coldbox:moduleService";
 
@@ -43,8 +43,8 @@ component singleton {
                 ._withKey( arguments.key );
 
         // If the component is lazy loaded, we need to generate an x-intersect snapshot of the component
-        return arguments.lazy ? 
-            local.instance._generateXIntersectLazyLoadSnapshot( params=arguments.params ) : 
+        return arguments.lazy ?
+            local.instance._generateXIntersectLazyLoadSnapshot( params=arguments.params ) :
             local.instance._render();
     }
 
@@ -53,7 +53,7 @@ component singleton {
      *
      * @incomingRequest The JSON struct payload of the incoming request.
      * @event The event object.
-     * 
+     *
      * @return A struct representing the response with updated component details or an error message.
      */
     function handleRequest( incomingRequest, event ) {
@@ -115,16 +115,17 @@ component singleton {
         event.setHTTPHeader( name="Pragma", value="no-cache" );
         event.setHTTPHeader( name="Expires", value="Fri, 01 Jan 1990 00:00:00 GMT" );
         event.setHTTPHeader( name="Cache-Control", value="no-cache, must-revalidate, no-store, max-age=0, private" );
-        
+
         return local.componentsResult;
     }
 
     /**
-     * Calculates a checksum for the component's data.
-     * 
-     * @payload string | The name of the computed property.
-     * 
-     * @return struct
+     * Calculates a checksum for the component's payload, inserts the checksum into the payload,
+	 * and returns the updated payload as a JSON string.
+     *
+     * @payload struct | the payload to calculate the checksum for
+     *
+     * @return string
      */
     function _caclulateChecksum( snapshot ) {
         var secret = moduleSettings.keyExists("secret") ? moduleSettings.secret : hash( moduleSettings.moduleRootPath );
@@ -135,16 +136,17 @@ component singleton {
 
     /**
      * Validates checksum for the component's data from snapshot.
-     * 
-     * @payload string | The name of the computed property.
-     * 
+     *
+     * @payload string | the JSON string of the component snapshot as posted by livewire
+     *
      * @return void
      */
     function _validateChecksum( snapshot ) {
-        var searchResults = reFind('"checksum":"(.*?)"', snapshot, 1, true )
-        if( searchResults.match.len() < 2 ) throw( type="CBWIRECorruptPayloadException", message="Checksum Not Found." );
-        var secret = moduleSettings.keyExists("secret") ? moduleSettings.secret : hash( moduleSettings.moduleRootPath );
-        if( searchResults.match[2] != hmac( replace( snapshot, searchResults.match[2], "", "one" ), secret, "HMACSHA256") ){
+		if( !isJson( snapshot ) ) throw( type="CBWIRECorruptPayloadException", message="Payload is not valid JSON." );
+		var deserializedSnapshot = deserializeJSON( arguments.snapshot );
+		if( !deserializedSnapshot.keyExists("checksum") ) throw( type="CBWIRECorruptPayloadException", message="Checksum Not Found." );
+		var secret = moduleSettings.keyExists("secret") ? moduleSettings.secret : hash( moduleSettings.moduleRootPath );
+        if( deserializedSnapshot.checksum != hmac( replace( snapshot, deserializedSnapshot.checksum, "", "one" ), secret, "HMACSHA256") ){
             throw( type="CBWIRECorruptPayloadException", message="Checksum Mismatch." );
         }
     }
@@ -152,10 +154,10 @@ component singleton {
     /**
      * Uploads all files from the request to the specified destination
      * after verifying the signed URL.
-     * 
+     *
      * @incomingRequest The JSON struct payload of the incoming request.
      * @event The event object.
-     * 
+     *
      * @return A struct representing the response with updated component details or an error message.
      */
     function handleFileUpload( incomingRequest, event ) {
@@ -189,10 +191,10 @@ component singleton {
 
     /**
      * Handles the preview of a file by reading the file metadata and sending it back to the client.
-     * 
+     *
      * @incomingRequest The JSON struct payload of the incoming request.
      * @event The event object.
-     * 
+     *
      * @return file contents
      */
     function handleFilePreview( incomingRequest, event ){
@@ -222,18 +224,18 @@ component singleton {
      * @componentName The name of the component to instantiate, possibly including a namespace.
      * @params Optional parameters to pass to the component constructor.
      * @key Optional key to use when retrieving the component from WireBox.
-     * 
+     *
      * @return The instantiated component object.
      * @throws ApplicationException If the component cannot be found or instantiated.
      */
     function createInstance( name ) {
         // Determine if the component name traverses a valid namespace or directory structure
         local.fullComponentPath = arguments.name;
-        
+
         if ( !local.fullComponentPath contains "wires." ) {
             local.fullComponentPath = "wires." & local.fullComponentPath;
         }
-        
+
         if ( find( "@", local.fullComponentPath ) ) {
             // This is a module reference, find in our module
             var params = listToArray( local.fullComponentPath, "@" );
@@ -274,9 +276,9 @@ component singleton {
         }
     }
 
-    /** 
+    /**
     * Returns the path to the modules folder.
-    * 
+    *
     * @module string | The name of the module.
     *
     * @return string
@@ -317,8 +319,8 @@ component singleton {
      * Returns the path to the wires folder within a module path.
      *
      * @module string | The name of the module.
-     * 
-     * @return string 
+     *
+     * @return string
      */
     function getModuleWiresPath( module ) {
         local.moduleRegistry = moduleService.getModuleRegistry();
@@ -327,7 +329,7 @@ component singleton {
 
     /**
      * Returns the ColdBox RequestContext object.
-     * 
+     *
      * @return The ColdBox RequestContext object.
      */
     function getEvent(){
@@ -336,7 +338,7 @@ component singleton {
 
     /**
      * Returns any request assets defined by components during the request.
-     * 
+     *
      * @return struct
      */
     function getRequestAssets() {
@@ -347,7 +349,7 @@ component singleton {
 
     /**
      * Returns the ColdBox ConfigSettings object.
-     * 
+     *
      * @return struct
      */
     function getConfigSettings(){
@@ -356,7 +358,7 @@ component singleton {
 
     /**
      * Returns an array of preprocessor instances.
-     * 
+     *
      * @return An array of preprocessor instances.
      */
     function getPreprocessors(){
@@ -364,7 +366,7 @@ component singleton {
         if( structKeyExists( variables, "preprocessors" ) ){
             return variables.preprocessors;
         }
-        // List of preprocesssors here. Had to hard code instead of using 
+        // List of preprocesssors here. Had to hard code instead of using
         // directoryList because of filesystem differences in various OSes
         local.files = [
             "TemplatePreprocessor.cfc",
@@ -382,18 +384,18 @@ component singleton {
 
     /**
      * Returns CSS styling needed by Livewire.
-     * 
+     *
      * @return string
      */
     function getStyles( cache=true ) {
         if (structKeyExists(variables, "styles") && arguments.cache ) {
             return variables.styles;
         }
-        
+
         savecontent variable="local.html" {
             include "styles.cfm";
         }
-        
+
         variables.styles = local.html;
         return variables.styles;
     }
@@ -403,10 +405,10 @@ component singleton {
      * We don't cache the results like we do with
      * styles because we need to generate a unique
      * CSRF token for each request.
-     * 
+     *
      * @return string
      */
-    function getScripts() {       
+    function getScripts() {
         savecontent variable="local.html" {
             include "scripts.cfm";
         }
@@ -415,7 +417,7 @@ component singleton {
 
     /**
      * Returns HTML to persist the state of anything inside the call.
-     * 
+     *
      * @return string
      */
     function persist( name ) {
@@ -424,7 +426,7 @@ component singleton {
 
     /**
      * Ends the persistence of the state of anything inside the call.
-     * 
+     *
      * @return string
      */
     function endPersist() {
@@ -433,10 +435,10 @@ component singleton {
 
     /**
      * Generates a secure signature for the upload URL.
-     * 
+     *
      * @baseURL string | The base URL for the upload request.
      * @expires string | The expiration time for the request.
-     * 
+     *
      * @return string
      */
     function generateSignature(baseUrl, expires) {
@@ -450,7 +452,7 @@ component singleton {
 
     /**
      * Generates a CSRF token for the current request.
-     * 
+     *
      * @return string
      */
     function generateCSRFToken() {
@@ -460,7 +462,7 @@ component singleton {
 
     /**
      * Returns the base URL for incoming requests.
-     * 
+     *
      * @return string
      */
     function getBaseURL() {
@@ -488,7 +490,7 @@ component singleton {
 
     /**
      * Verifies signed upload URL.
-     * 
+     *
      * @return boolean
      */
     function verifySignedUploadURL( expires, signature ) {
@@ -554,11 +556,11 @@ component singleton {
 
     /**
      * Returns the URI endpoint for updating CBWIRE components.
-     * 
+     *
      * @return string
      */
     function getUpdateEndpoint() {
-        var settings = variables.moduleSettings;        
+        var settings = variables.moduleSettings;
         return settings.keyExists( "updateEndpoint") && settings.updateEndpoint.len() ? settings.updateEndpoint : "/cbwire/update";
     }
 }
