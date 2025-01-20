@@ -1145,6 +1145,22 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
             } );
 
+            it( "should throw a CBWIREException when trying to update a locked property (list)", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_throw_exception_on_locked_data_property_list",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+				expect( function() {
+					cbwireController.handleRequest( payload, event );
+				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
+            } );
+
             it( "should throw a CBWIREException when trying to update a locked property (string)", function() {
                 var payload = incomingRequest(
                     memo = {

@@ -809,7 +809,7 @@ component output="true" {
     /**
      * Validate if key being updated is a locked property.
      *
-     * @key struct | A struct or string containing the key being updated.
+     * @key string | the data property key being updated.
      *
      * @return void
      */
@@ -817,9 +817,8 @@ component output="true" {
 		if( !variables.keyExists("locked") ) return;
 		if( isArray( variables.locked ) && arrayFindNoCase( variables.locked, arguments.key ) )
 			throw( type="CBWIREException", message="Locked properties cannot be updated." );
-		else if ( isSimpleValue( variables.locked ) && arguments.key == variables.locked )
+		else if ( isSimpleValue( variables.locked ) && listToArray(variables.locked).find( arguments.key ) )
 			throw( type="CBWIREException", message="Locked properties cannot be updated." );
-
 	}
 
     /**
