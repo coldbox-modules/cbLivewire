@@ -191,7 +191,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 var result = CBWIREController.wire( "test.should_support_computed_properties" );
                 expect( reFindNoCase( "UUID: [A-Za-z0-9-]+", result ) ).toBeGT( 0 );
             } );
-            
+
             it( "should cache computed properties", function() {
                 var result = CBWIREController.wire( "test.should_cache_computed_properties" );
                 var firstUUID = reFindNoCase( "UUID: ([A-Za-z0-9-]+)", result, 1, true ).match[ 2 ];
@@ -685,7 +685,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 expect( response.components[1].effects.html ).toInclude( "CBWIRE Slays!" );
             } );
 
-            it( "should run action we pass it with parameters", function() {  
+            it( "should run action we pass it with parameters", function() {
                 var payload = incomingRequest(
                     memo = {
                         "name": "TestComponent",
@@ -704,7 +704,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
                     ],
                     updates = {}
                 );
-                
+
                 var response = cbwireController.handleRequest( payload, event );
                 expect( response.components[1].effects.html ).toInclude( "Title: Hello world from CBWIRE!" );
             } );
@@ -1128,6 +1128,100 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 var response = cbwireController.handleRequest( payload, event );
                 expect( response.components[1].effects.html ).toInclude( "CBWIRE Slaps!" );
             } );
+
+            it( "should throw a CBWIREException when trying to update a locked property (array)", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_throw_exception_on_locked_data_property_array",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+				expect( function() {
+					cbwireController.handleRequest( payload, event );
+				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
+            } );
+
+            it( "should throw a CBWIREException when trying to update a locked property (list)", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_throw_exception_on_locked_data_property_list",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+				expect( function() {
+					cbwireController.handleRequest( payload, event );
+				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
+            } );
+
+            it( "should throw a CBWIREException when trying to update a locked property (string)", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_throw_exception_on_locked_data_property_string",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+				expect( function() {
+					cbwireController.handleRequest( payload, event );
+				} ).toThrow( message="The property lockedPropertyKey is locked and cannot be updated."  );
+            } );
+
+            it( "should not throw an error when empty array is used for locked property ", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_not_throw_exception_on_locked_data_property_empty_array",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+                var response = cbwireController.handleRequest( payload, event );
+                expect( response.components[1].effects.html ).toInclude( "Locked Property Value: Changed Value" );
+            } );
+
+            it( "should not throw an error when empty string is used for locked property ", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_not_throw_exception_on_locked_data_property_empty_string",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+                var response = cbwireController.handleRequest( payload, event );
+                expect( response.components[1].effects.html ).toInclude( "Locked Property Value: Changed Value" );
+            } );
+
+            it( "should not throw an error when data type other than array or string is used for locked property ", function() {
+                var payload = incomingRequest(
+                    memo = {
+                        "name": "test.should_not_throw_exception_on_locked_data_property_other",
+                        "id": "Z1Ruz1tGMPXSfw7osBW2",
+                        "children": []
+                    },
+                    data = {},
+                    calls = [],
+                    updates = { "lockedPropertyKey" : "Changed Value" }
+                );
+                var response = cbwireController.handleRequest( payload, event );
+                expect( response.components[1].effects.html ).toInclude( "Locked Property Value: Changed Value" );
+            } );
+
         } );
 
         describe("File Uploads", function() {
@@ -1360,7 +1454,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 			it( "throws error if it's unable to find a module component", function() {
 				expect( function() {
 					var result = cbwireController.wire( "missing@someModule" );
-				} ).toThrow( type="ModuleNotFound" );  
+				} ).toThrow( type="ModuleNotFound" );
 			} );
 
 			it( "can render component from nested module using default wires location", function() {
@@ -1383,41 +1477,41 @@ component extends="coldbox.system.testing.BaseTestCase" {
                     preprocessor = getInstance("CBWIREPreprocessor@cbwire");
                     prepareMock( preprocessor );
                 });
-    
+
                 it("should parse and replace single cbwire tag with no arguments", function() {
                     var input = "<cbwire:testComponent/>";
                     var expected = "##wire( name=""testComponent"", params={ }, lazy=false )##";
                     var result = preprocessor.handle(input);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should parse and replace cbwire tag with multiple arguments", function() {
                     var input = "<cbwire:testComponent :param1='value1' param2='value2'/>";
                     var expected = "##wire( name=""testComponent"", params={ param1=value1, param2='value2' }, lazy=false )##";
                     var result = preprocessor.handle(input);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should correctly handle arguments with expressions", function() {
                     var input = "<cbwire:testComponent :expr='someExpression'/>";
                     var expected = "##wire( name=""testComponent"", params={ expr=someExpression }, lazy=false )##";
                     var result = preprocessor.handle(input);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should maintain order and syntax of multiple attributes", function() {
                     var input = "<cbwire:testComponent attr1='foo' :expr='bar' attr2='baz'/>";
                     var expected = "##wire( name=""testComponent"", params={ attr1='foo', expr=bar, attr2='baz' }, lazy=false )##";
                     var result = preprocessor.handle(input);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should replace multiple cbwire tags in a single content string", function() {
                     var input = "Here is a test <cbwire:firstComponent attr='value'/> and another <cbwire:secondComponent :expr='expression'/>";
                     var expected = "Here is a test ##wire( name=""firstComponent"", params={ attr='value' }, lazy=false )## and another ##wire( name=""secondComponent"", params={ expr=expression }, lazy=false )##";
                     var result = preprocessor.handle(input);
                     expect(result).toBe(expected);
-                }); 
+                });
 
                 it("should throw an exception for unparseable tags", function() {
                     var input = "<cbwire:testComponent :broken='noEndQuote>";
@@ -1434,56 +1528,56 @@ component extends="coldbox.system.testing.BaseTestCase" {
                     // Create an instance of the component that handles teleport preprocessing
                     preprocessor = getInstance( "TeleportPreprocessor@cbwire" );
                 });
-    
+
                 it("should replace @teleport with the correct template tag", function() {
                     var content = "@teleport(selector) content @endteleport";
                     var expected = '<template x-teleport="selector"> content </template>';
                     var result = preprocessor.handle(content);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should handle single quotes around the selector", function() {
                     var content = "@teleport('selector') content @endteleport";
                     var expected = '<template x-teleport="selector"> content </template>';
                     var result = preprocessor.handle(content);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should handle double quotes around the selector", function() {
                     var content = '@teleport("selector") content @endteleport';
                     var expected = '<template x-teleport="selector"> content </template>';
                     var result = preprocessor.handle(content);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should handle no quotes around the selector", function() {
                     var content = "@teleport(selector) content @endteleport";
                     var expected = '<template x-teleport="selector"> content </template>';
                     var result = preprocessor.handle(content);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should handle spaces within the parentheses", function() {
                     var content = "@teleport(   selector   ) content @endteleport";
                     var expected = '<template x-teleport="selector"> content </template>';
                     var result = preprocessor.handle(content);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should handle multiple teleport directives in the same content", function() {
                     var content = "@teleport(selector1) content1 @endteleport @teleport(selector2) content2 @endteleport";
                     var expected = '<template x-teleport="selector1"> content1 </template> <template x-teleport="selector2"> content2 </template>';
                     var result = preprocessor.handle(content);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should handle nested teleport directives", function() {
                     var content = "@teleport(outer) @teleport(inner) content @endteleport @endteleport";
                     var expected = '<template x-teleport="outer"> <template x-teleport="inner"> content </template> </template>';
                     var result = preprocessor.handle(content);
                     expect(result).toBe(expected);
                 });
-    
+
                 it("should not alter content without teleport directives", function() {
                     var content = "Normal content without directives";
                     var result = preprocessor.handle(content);
@@ -1497,9 +1591,9 @@ component extends="coldbox.system.testing.BaseTestCase" {
     /**
      * Helper test method for creating incoming request payloads
      *
-     * @data 
+     * @data
      * @calls
-     * 
+     *
      * @return struct
      */
     private function incomingRequest(
@@ -1539,7 +1633,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
     /**
      * Take a rendered HTML component and breaks out its snapshot,
      * effects, etc for analysis during tests.
-     * 
+     *
      * @return struct
      */
     private function parseRendering( html, index = 1 ) {
@@ -1547,16 +1641,16 @@ component extends="coldbox.system.testing.BaseTestCase" {
         // Determine outer element
         local.outerElementMatches = reMatchNoCase( "<([a-z]+)\s*", html );
         local.result[ "outerElement" ] = reFindNoCase( "<([a-z]+)\s*", html, 1, true ).match[ 2 ];
-        // Parse snapshot 
+        // Parse snapshot
         local.result[ "snapshot" ] = parseSnapshot( html, index );
-        // Parse effects 
+        // Parse effects
         local.result[ "effects" ] = parseEffects( html, index );
         return local.result;
     }
 
     /**
      * Parse the snapshot from a rendered HTML component
-     * 
+     *
      * @return struct
      */
     private function parseSnapshot( html, index = 1 ) {
@@ -1569,7 +1663,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
     /**
      * Parse the effects from a rendered HTML component
-     * 
+     *
      * @return struct
      */
     private function parseEffects( html, index = 1 ) {
