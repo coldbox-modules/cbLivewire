@@ -21,4 +21,5 @@ component singleton {
 			)
 			.noRender();
 	}
+
 }

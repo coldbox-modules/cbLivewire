@@ -27,7 +27,7 @@ component {
 	moduleRootPath = reReplaceNoCase( this.mappings[ "/root" ], "#request.module_name#(\\|/)test-harness(\\|/)", "" );
 	this.mappings[ "/moduleroot" ] = moduleRootPath;
 	this.mappings[ "/#request.MODULE_NAME#" ] = moduleRootPath & "#request.MODULE_NAME#";
-	this.mappings[ "/cbvalidation" ]= rootPath & "modules/cbvalidation";
+	this.mappings[ "/cbvalidation" ] = rootPath & "modules/cbvalidation";
 	this.mappings[ "/modules" ] = rootPath & "modules";
 	this.mappings[ "/modules_app" ] = rootPath & "modules_app";
 

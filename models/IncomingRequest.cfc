@@ -1,9 +1,9 @@
 component accessors="true" singleton {
 
-    /*
-    * Inject the component loader to get the component instance.
-    */
-    property name="componentLoader" inject="ComponentLoader@cbwire";
+	/*
+	 * Inject the component loader to get the component instance.
+	 */
+	property name="componentLoader" inject="ComponentLoader@cbwire";
 
 	/**
 	 * Primary entry point for cbwire requests.
@@ -13,9 +13,11 @@ component accessors="true" singleton {
 	 * URI: /livewire/messages/:wireComponent
 	 */
 	function handle( event, rc, prc ){
-		return componentLoader.load( rc.wireComponent )
+		return componentLoader
+			.load( rc.wireComponent )
 			.startup( initialRender = false )
 			.hydrate()
-			.subsequentRenderIt( event=event, rc=rc, prc=prc );
+			.subsequentRenderIt( event = event, rc = rc, prc = prc );
 	}
+
 }
