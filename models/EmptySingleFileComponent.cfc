@@ -1,9 +1,13 @@
 component extends="cbwire.models.Component" {
 
-    {{ CFC_CONTENTS }}
+	{
+		{
+			CFC_CONTENTS
+		}
+	}
 
-    function onRender() {
-        return template( "{{ TEMPLATE_PATH }}" );
-    }
+	function onRender(){
+		return template( "{{ TEMPLATE_PATH }}" );
+	}
 
 }

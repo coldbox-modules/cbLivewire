@@ -1,223 +1,214 @@
 component extends="cbwire.models.Component" {
 
-    property name="CBWIREService" inject="CBWIREService@cbwire";
+	property name="CBWIREService" inject="CBWIREService@cbwire";
 
-    constraints = {
-        "email" = { required : true }
-    };
+	constraints = { "email" : { required : true } };
 
-    queryString = [ "name" ];
+	queryString = [ "name" ];
 
-    listeners = {
-        "onSuccess": "someMethod",
-        "missingAction": "actionDoesNotExists"
-    };
+	listeners = {
+		"onSuccess" : "someMethod",
+		"missingAction" : "actionDoesNotExists"
+	};
 
-    data = {
-        "name": "Grant",
-        "email": "",
-        "mounted": false,
-        "hydrated": false,
-        "updated": false,
-        "listener": false,
-        "onDIComplete": false,
-        "calledGetInstance": false,
-        "validateOrFail": false,
-        "validate": false,
-        "calledLoaded": false,
-        "toggled": false,
-        "myFile": "",
-        "sum": 0,
-        "someStruct": {
-            "someKey": "initial value"
-        },
-        "someArray": [
-            {
-                "someKey": "initial value"
-            }
-        ]
-    };
+	data = {
+		"name" : "Grant",
+		"email" : "",
+		"mounted" : false,
+		"hydrated" : false,
+		"updated" : false,
+		"listener" : false,
+		"onDIComplete" : false,
+		"calledGetInstance" : false,
+		"validateOrFail" : false,
+		"validate" : false,
+		"calledLoaded" : false,
+		"toggled" : false,
+		"myFile" : "",
+		"sum" : 0,
+		"someStruct" : { "someKey" : "initial value" },
+		"someArray" : [ { "someKey" : "initial value" } ]
+	};
 
-    computed = {
-        "fivePlusFive": function() {
-            return 5 + 5;
-        },
-        "getTick": function() {
-            sleep( 10 );
-            var data.tickCount = getTickCount();
-            return data.tickCount;
-        }
-    }
+	computed = {
+		"fivePlusFive" : function(){
+			return 5 + 5;
+		},
+		"getTick" : function(){
+			sleep( 10 );
+			var data.tickCount = getTickCount();
+			return data.tickCount;
+		}
+	}
 
-    function onLoad() {
-        data.calledLoaded = true;
-    }
+	function onLoad(){
+		data.calledLoaded = true;
+	}
 
-    function onDIComplete() {
-        data.onDIComplete = true;
-    }
+	function onDIComplete(){
+		data.onDIComplete = true;
+	}
 
-    function onMount( parameters, rc, prc ) {
-        data.mounted = true;
-    }
+	function onMount( parameters, rc, prc ){
+		data.mounted = true;
+	}
 
-    function onHydrate() {
-        data.hydrated = true;
-    }
+	function onHydrate(){
+		data.hydrated = true;
+	}
 
-    function onUpdate() {
-        data.updated = true;
-    }
+	function onUpdate(){
+		data.updated = true;
+	}
 
-    function callGetInstance() {
-        getInstance( "CBWIREService@cbwire" );
-        data.calledGetInstance = true;
-    }
+	function callGetInstance(){
+		getInstance( "CBWIREService@cbwire" );
+		data.calledGetInstance = true;
+	}
 
-    function dispatchEventWithoutArgs(){
-        dispatch( "Event1" );
-    }
+	function dispatchEventWithoutArgs(){
+		dispatch( "Event1" );
+	}
 
-    function dispatchEventWithArgs(){
-        dispatch( "Event1", {
-            "someVar": true
-        } );
-    }
+	function dispatchEventWithArgs(){
+		dispatch( "Event1", { "someVar" : true } );
+	}
 
-    function emitEventWithoutArgs() {
-        emit( "Event1" );
-    }
+	function emitEventWithoutArgs(){
+		emit( "Event1" );
+	}
 
-    function emitEventWithOneArg() {
-        emit( "Event1", "someArg" );
-    }
+	function emitEventWithOneArg(){
+		emit( "Event1", "someArg" );
+	}
 
-    function emitEventWithManyArgs() {
-        emit( "Event1", "arg1", "arg2", "arg3" );
-    }
+	function emitEventWithManyArgs(){
+		emit( "Event1", "arg1", "arg2", "arg3" );
+	}
 
-    function emitEventWithArrayArg(){
-        emit( "Event1", [ "arg1", "arg2", "arg3" ] );
-    }
-    
-    function emitSelfEventWithoutArgs() {
-        emitSelf( "Event1" );
-    }
+	function emitEventWithArrayArg(){
+		emit( "Event1", [ "arg1", "arg2", "arg3" ] );
+	}
 
-    function emitSelfEventWithOneArg() {
-        emitSelf( "Event1", "someArg" );
-    }
+	function emitSelfEventWithoutArgs(){
+		emitSelf( "Event1" );
+	}
 
-    function emitSelfEventWithManyArgs() {
-        emitSelf( "Event1", [ "arg1", "arg2", "arg3" ] );
-    }
+	function emitSelfEventWithOneArg(){
+		emitSelf( "Event1", "someArg" );
+	}
 
-    function emitUpEventWithoutArgs() {
-        emitUp( "Event1" );
-    }
+	function emitSelfEventWithManyArgs(){
+		emitSelf( "Event1", [ "arg1", "arg2", "arg3" ] );
+	}
 
-    function emitUpEventWithOneArg() {
-        emitUp( "Event1", "someArg" );
-    }
+	function emitUpEventWithoutArgs(){
+		emitUp( "Event1" );
+	}
 
-    function emitUpEventWithManyArgs() {
-        emitUp( "Event1", "arg1", "arg2", "arg3" );
-    }
+	function emitUpEventWithOneArg(){
+		emitUp( "Event1", "someArg" );
+	}
 
-    function emitToEventWithoutArgs() {
-        emitTo( "Component2", "Event1" );
-    }
+	function emitUpEventWithManyArgs(){
+		emitUp( "Event1", "arg1", "arg2", "arg3" );
+	}
 
-    function emitToEventWithOneArg() {
-        emitTo( "Component2", "Event1", "someArg" );
-    }
+	function emitToEventWithoutArgs(){
+		emitTo( "Component2", "Event1" );
+	}
 
-    function emitToEventWithManyArgs() {
-        emitTo( "Component2", "Event1", "arg1", "arg2", "arg3" );
-    }
+	function emitToEventWithOneArg(){
+		emitTo( "Component2", "Event1", "someArg" );
+	}
 
-    function doNotRender() {
-        noRender();
-    }
+	function emitToEventWithManyArgs(){
+		emitTo(
+			"Component2",
+			"Event1",
+			"arg1",
+			"arg2",
+			"arg3"
+		);
+	}
 
-    function redirectToURI() {
-        return relocate( uri="/some-url" );
-    }
+	function doNotRender(){
+		noRender();
+	}
 
-    function redirectToURL() {
-        return relocate( uri="https://www.google.com" );
-    }
+	function redirectToURI(){
+		return relocate( uri = "/some-url" );
+	}
 
-    function redirectToEvent(){
-        return relocate( event="examples.index" );
-    }
+	function redirectToURL(){
+		return relocate( uri = "https://www.google.com" );
+	}
 
-    function redirectWithFlash() {
-        relocate( event="examples.index", persistStruct={
-            confirm: "Redirect successful"
-        } );
-    }
+	function redirectToEvent(){
+		return relocate( event = "examples.index" );
+	}
 
-    function runValidateFailure() {
-        validateOrFail();
-        data.validateOrFail = true;
-    }
+	function redirectWithFlash(){
+		relocate( event = "examples.index", persistStruct = { confirm : "Redirect successful" } );
+	}
 
-    function runValidate() {
-        var result = validate();
+	function runValidateFailure(){
+		validateOrFail();
+		data.validateOrFail = true;
+	}
 
-        if ( result.hasErrors() ) {
-            data.validate = true;
-        }
-    }
+	function runValidate(){
+		var result = validate();
 
-    function runValidateSuccess() {
-        data.email = 'user@domain.com';
-        validateOrFail();
-        data.validateOrFail = true;
-    }
+		if ( result.hasErrors() ) {
+			data.validate = true;
+		}
+	}
 
-    function names() {
-        return [
-            "Luis",
-            "Esme",
-            "Michael"
-        ];
-    }
+	function runValidateSuccess(){
+		data.email = "user@domain.com";
+		validateOrFail();
+		data.validateOrFail = true;
+	}
 
-    function changeDataProperty() {
-        data.name = 'Something else';
-    }
+	function names(){
+		return [ "Luis", "Esme", "Michael" ];
+	}
 
-    function someMethod() {
-        data.listener = true;
-    }
+	function changeDataProperty(){
+		data.name = "Something else";
+	}
 
-    function actionWithComputedProperty() {
-        data.sum = computed.fivePlusFive();
-    }
+	function someMethod(){
+		data.listener = true;
+	}
 
-    function actionWithRefresh() {
-        refresh();
-    }
+	function actionWithComputedProperty(){
+		data.sum = computed.fivePlusFive();
+	}
 
-    function tryResetSingleProperty() {
-        reset( "name" );
-    }
+	function actionWithRefresh(){
+		refresh();
+	}
 
-    function tryResetArrayOfProperties() {
-        reset( [ "name", "sum" ] );
-    }
+	function tryResetSingleProperty(){
+		reset( "name" );
+	}
 
-    function tryResetAllProperties() {
-        reset();
-    }
+	function tryResetArrayOfProperties(){
+		reset( [ "name", "sum" ] );
+	}
 
-    function tryResetExceptSingleProperty() {
-        resetExcept( "sum" );
-    }
+	function tryResetAllProperties(){
+		reset();
+	}
 
-    function tryResetExceptArrayOfProperties() {
-        resetExcept( [ "name", "sum" ] );
-    }
+	function tryResetExceptSingleProperty(){
+		resetExcept( "sum" );
+	}
+
+	function tryResetExceptArrayOfProperties(){
+		resetExcept( [ "name", "sum" ] );
+	}
+
 }

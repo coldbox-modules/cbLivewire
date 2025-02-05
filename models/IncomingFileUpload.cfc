@@ -1,6 +1,6 @@
 component singleton {
 
-	/* 
+	/*
 		Uploads all files from the request to the specified destination.
 		Each file is saved to a unique file name.
 		Returns a list of the paths to the saved files.
@@ -16,4 +16,5 @@ component singleton {
 		} );
 		return { "paths" : paths };
 	}
+
 }

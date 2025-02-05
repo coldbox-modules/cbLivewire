@@ -48,7 +48,10 @@ component accessors="true" singleton {
 			// This is a module reference, find in our module
 			var params = listToArray( arguments.componentName, "@" );
 			if ( params.len() != 2 ) {
-				throw( type="ModuleNotFound", message = "CBWIRE cannot locate the module or component using '" & arguments.componentName & "'." );
+				throw(
+					type = "ModuleNotFound",
+					message = "CBWIRE cannot locate the module or component using '" & arguments.componentName & "'."
+				);
 			}
 			// reuse the getRootComponent() method since getModuleComponentPath() returns dot notation path to wire component
 			var comp = getRootComponent( getModuleComponentPath( params[ 1 ], params[ 2 ] ), arguments.initialRender );
@@ -76,19 +79,19 @@ component accessors="true" singleton {
 	 * @path String | Name of the cbwire component.
 	 * @module String | Name of the module to look for wire in.
 	 */
-	private function getModuleComponentPath( path, module ) {
+	private function getModuleComponentPath( path, module ){
 		var moduleConfig = moduleService.getModuleConfigCache();
 		var moduleRegistry = moduleService.getModuleRegistry();
-		
+
 		if ( !moduleConfig.keyExists( module ) ) {
-			throw( type="ModuleNotFound", message = "CBWIRE cannot locate the module '" & arguments.module & "'.")
+			throw( type = "ModuleNotFound", message = "CBWIRE cannot locate the module '" & arguments.module & "'." )
 		}
 
 		// If there is a dot in our path, then we are referencing a folder within a module.
 		// If not, then use the default wire location.
-		var moduleComponentPath = arguments.path contains "." ?
-			moduleRegistry[ module ].invocationPath & "." & module & "." & arguments.path :
-			moduleRegistry[ module ].invocationPath & "." & module & "." & getWiresLocation() & "." & arguments.path;
+		var moduleComponentPath = arguments.path contains "." ? moduleRegistry[ module ].invocationPath & "." & module & "." & arguments.path : moduleRegistry[
+			module
+		].invocationPath & "." & module & "." & getWiresLocation() & "." & arguments.path;
 
 		return moduleComponentPath;
 	}
@@ -144,27 +147,37 @@ component accessors="true" singleton {
 		if ( currentModule.len() && currentModule != "cbwire" ) {
 			// incoming request is from a module
 
-			// if request is already targeting a module wire 
-			if( left( componentPath, len( wireRoot ) ) != wireRoot ){
+			// if request is already targeting a module wire
+			if ( left( componentPath, len( wireRoot ) ) != wireRoot ) {
 				return componentPath;
 			}
-			
+
 			// default componentPath to module wire path
 			componentPath = currentModule & "." & componentPath;
 
 			var moduleWiresPath = moduleService.getModuleRegistry()[ currentModule ].physicalPath & "/" & currentModule & "/" & getWiresLocation();
 			var wireName = reReplace( listLast( componentPath, "." ), "[^\w.\-]", "", "all" );
 			// check if module component exists and if it does not, look in root wires location
-			if( !fileExists( moduleWiresPath & "/" & wireName & ".cfc" ) && !fileExists( moduleWiresPath & "/" & wireName & ".cfm" ) ){
+			if (
+				!fileExists( moduleWiresPath & "/" & wireName & ".cfc" ) && !fileExists(
+					moduleWiresPath & "/" & wireName & ".cfm"
+				)
+			) {
 				var wireRootPath = getController().getappRootPath() & "/" & getWiresLocation();
-				if( fileExists( wireRootPath & "/" & wireName & ".cfc" ) || fileExists( wireRootPath & "/" & wireName & ".cfm" ) ){
+				if (
+					fileExists( wireRootPath & "/" & wireName & ".cfc" ) || fileExists(
+						wireRootPath & "/" & wireName & ".cfm"
+					)
+				) {
 					// component exists in root wires location, use it
 					componentPath = getAppMapping().len() ? getAppMapping() & "." : "" & getWiresLocation() & "." & wireName;
-				}else{
-					throw( type="ModuleNotFound", message = "CBWIRE cannot locate the wire using '" & componentPath & "'." );
+				} else {
+					throw(
+						type = "ModuleNotFound",
+						message = "CBWIRE cannot locate the wire using '" & componentPath & "'."
+					);
 				}
 			}
-			
 		}
 		return componentPath;
 	}
@@ -180,4 +193,5 @@ component accessors="true" singleton {
 			.getContext()
 			.getCurrentModule();
 	}
+
 }
