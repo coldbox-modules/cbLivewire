@@ -21,10 +21,15 @@ jobs:
     env:
       DB_USER: root
       DB_PASSWORD: root
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
         cfengine: [ "lucee@5", "adobe@2021", "adobe@2023" ]
+        experimental: [ false ]
+        include:
+          - cfengine: "boxlang@1"
+            experimental: true
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -46,6 +51,11 @@ jobs:
 
       - name: Setup CommandBox
         uses: elpete/setup-commandbox@v1.0.0
+
+      - name: Update Commandbox Boxlang Module
+        if: ${{ matrix.cfengine == 'boxlang@1' }}
+        run:
+          box install --force commandbox-boxlang
 
       - name: Setup env.VERSION
         run: |
